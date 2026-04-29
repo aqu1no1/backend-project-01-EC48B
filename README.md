@@ -11,6 +11,7 @@ Biblioteca de acesso ao MongoDB utilizando Node.js com foco em armazenamento e b
 | Nome | RA |
 |------|----|
 | Mauricio Alves de Aquino | 2564556 |
+| Leonardo Pereira Jorge | 2503689 |
 
 ---
 
