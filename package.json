@@ -1,0 +1,31 @@
+{
+  "name": "utfpr-backend-project-01",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aqu1no1/backend-project-01-EC48B.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aqu1no1/backend-project-01-EC48B/issues"
+  },
+  "homepage": "https://github.com/aqu1no1/backend-project-01-EC48B#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "mongodb": "^7.2.0",
+    "uuid": "^14.0.0"
+  }
+}
