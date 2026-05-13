@@ -1,12 +1,18 @@
 import connect from '../db/connect.js';
 import { v4 as uuidv4 } from 'uuid';
+import { validateUrl } from '../validators/validate-url.js';
+import { validateDuration } from '../validators/validate-duration.js';
+import { logError, logInfo } from '../logger/logger.js';
 
 async function insertVideo({ name, url, category, duration, userId }) {
-    if (!name)      throw new Error('Campo obrigatório ausente: nome');
-    if (!url)       throw new Error('Campo obrigatório ausente: url');
+    if (!name) throw new Error('Campo obrigatório ausente: nome');
+    if (!url) throw new Error('Campo obrigatório ausente: url');
     if (!category) throw new Error('Campo obrigatório ausente: categoria');
-    if (!duration)   throw new Error('Campo obrigatório ausente: duracao');
-    if (!userId)    throw new Error('Campo obrigatório ausente: userId');
+    if (duration === undefined || duration === null) throw new Error('Campo obrigatório ausente: duracao');
+    if (!userId) throw new Error('Campo obrigatório ausente: userId');
+
+    validateUrl(url);
+    validateDuration(duration);
 
     try {
         const db = await connect();
@@ -25,10 +31,10 @@ async function insertVideo({ name, url, category, duration, userId }) {
         };
 
         const result = await collection.insertOne(video);
-        console.log(`Vídeo inserido com id: ${result.insertedId}`);
+        logInfo('insertVideo', `Vídeo inserido com id: ${result.insertedId}`);
         return result;
     } catch (error) {
-        console.error('Erro ao inserir vídeo:', error.message);
+        logError('insertVideo', 'Erro ao inserir vídeo', error);
         throw error;
     }
 }

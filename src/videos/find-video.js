@@ -1,15 +1,16 @@
 import connect from '../db/connect.js';
+import { logError, logInfo } from '../logger/logger.js';
 
 async function findVideos(filtro = {}) {
     try {
         const db = await connect();
         const collection = db.collection('videos');
-
         const videos = await collection.find(filtro).toArray();
-        console.log(`${videos.length} vídeo(s) encontrado(s)`);
+
+        logInfo('findVideos', `${videos.length} vídeo(s) encontrado(s)`);
         return videos;
     } catch (error) {
-        console.error('Erro ao buscar vídeos:', error.message);
+        logError('findVideos', 'Erro ao buscar vídeos', error);
         throw error;
     }
 }

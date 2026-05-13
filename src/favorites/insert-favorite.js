@@ -1,8 +1,9 @@
 import connect from '../db/connect.js';
 import { v4 as uuidv4 } from 'uuid';
+import { logError, logInfo, logWarn } from '../logger/logger.js';
 
 async function insertFavorite({ userId, videoId }) {
-    if (!userId)  throw new Error('Campo obrigatório ausente: userId');
+    if (!userId) throw new Error('Campo obrigatório ausente: userId');
     if (!videoId) throw new Error('Campo obrigatório ausente: videoId');
 
     try {
@@ -10,9 +11,8 @@ async function insertFavorite({ userId, videoId }) {
         const collection = db.collection('favoritos');
 
         const jaExiste = await collection.findOne({ userId, videoId });
-
         if (jaExiste) {
-            console.warn('Vídeo já está nos favoritos');
+            logWarn('insertFavorite', 'Vídeo já está nos favoritos');
             return null;
         }
 
@@ -24,10 +24,10 @@ async function insertFavorite({ userId, videoId }) {
         };
 
         const result = await collection.insertOne(favorito);
-        console.log(`Favorito inserido com id: ${result.insertedId}`);
+        logInfo('insertFavorite', `Favorito inserido com id: ${result.insertedId}`);
         return result;
     } catch (error) {
-        console.error('Erro ao inserir favorito:', error.message);
+        logError('insertFavorite', 'Erro ao inserir favorito', error);
         throw error;
     }
 }

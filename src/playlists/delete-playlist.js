@@ -1,4 +1,5 @@
 import connect from '../db/connect.js';
+import { logError, logInfo, logWarn } from '../logger/logger.js';
 
 async function deletePlaylist(id) {
     if (!id) throw new Error('Campo obrigatório ausente: id');
@@ -6,18 +7,17 @@ async function deletePlaylist(id) {
     try {
         const db = await connect();
         const collection = db.collection('playlists');
-
         const result = await collection.deleteOne({ _id: id });
 
         if (result.deletedCount === 0) {
-            console.warn(`Nenhuma playlist encontrada com id: ${id}`);
+            logWarn('deletePlaylist', `Nenhuma playlist encontrada com id: ${id}`);
             return null;
         }
 
-        console.log(`Playlist deletada com id: ${id}`);
+        logInfo('deletePlaylist', `Playlist deletada com id: ${id}`);
         return result;
     } catch (error) {
-        console.error('Erro ao deletar playlist:', error.message);
+        logError('deletePlaylist', 'Erro ao deletar playlist', error);
         throw error;
     }
 }

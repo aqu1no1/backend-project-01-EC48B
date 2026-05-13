@@ -1,18 +1,18 @@
 import connect from '../db/connect.js';
+import { logError, logInfo } from '../logger/logger.js';
 
 async function findUsers(filtro = {}) {
     try {
         const db = await connect();
         const collection = db.collection('users');
-
         const users = await collection.find(filtro, {
             projection: { password: 0 },
         }).toArray();
 
-        console.log(`${users.length} usuário(s) encontrado(s)`);
+        logInfo('findUsers', `${users.length} usuário(s) encontrado(s)`);
         return users;
     } catch (error) {
-        console.error('Erro ao buscar usuários:', error.message);
+        logError('findUsers', 'Erro ao buscar usuários', error);
         throw error;
     }
 }

@@ -1,15 +1,16 @@
 import connect from '../db/connect.js';
+import { logError, logInfo } from '../logger/logger.js';
 
 async function findPlaylists(filtro = {}) {
     try {
         const db = await connect();
         const collection = db.collection('playlists');
-
         const playlists = await collection.find(filtro).toArray();
-        console.log(`${playlists.length} playlist(s) encontrada(s)`);
+
+        logInfo('findPlaylists', `${playlists.length} playlist(s) encontrada(s)`);
         return playlists;
     } catch (error) {
-        console.error('Erro ao buscar playlists:', error.message);
+        logError('findPlaylists', 'Erro ao buscar playlists', error);
         throw error;
     }
 }

@@ -1,8 +1,12 @@
 import connect from '../db/connect.js';
+import { validateDuration } from '../validators/validate-duration.js';
+import { logError, logInfo, logWarn } from '../logger/logger.js';
 
 async function updateVideo(id, dto) {
     if (!id) throw new Error('Campo obrigatório ausente: id');
     if (!dto || Object.keys(dto).length === 0) throw new Error('Nenhum campo para atualizar');
+
+    if (dto.duration !== undefined) validateDuration(dto.duration);
 
     try {
         const db = await connect();
@@ -18,25 +22,21 @@ async function updateVideo(id, dto) {
             update.$inc = { ...update.$inc, 'count.dislike': 1 };
             delete dto.dislike;
         }
-
         if (Object.keys(dto).length > 0) {
             update.$set = { ...update.$set, ...dto };
         }
 
-        const result = await collection.updateOne(
-            { _id: id },
-            update
-        );
+        const result = await collection.updateOne({ _id: id }, update);
 
         if (result.matchedCount === 0) {
-            console.warn(`Nenhum vídeo encontrado com id: ${id}`);
+            logWarn('updateVideo', `Nenhum vídeo encontrado com id: ${id}`);
             return null;
         }
 
-        console.log(`Vídeo atualizado com id: ${id}`);
+        logInfo('updateVideo', `Vídeo atualizado com id: ${id}`);
         return result;
     } catch (error) {
-        console.error('Erro ao atualizar vídeo:', error.message);
+        logError('updateVideo', 'Erro ao atualizar vídeo', error);
         throw error;
     }
 }

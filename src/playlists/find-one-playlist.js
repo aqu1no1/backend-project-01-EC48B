@@ -1,4 +1,5 @@
 import connect from '../db/connect.js';
+import { logError, logInfo, logWarn } from '../logger/logger.js';
 
 async function findOnePlaylist(id) {
     if (!id) throw new Error('Campo obrigatório ausente: id');
@@ -6,18 +7,17 @@ async function findOnePlaylist(id) {
     try {
         const db = await connect();
         const collection = db.collection('playlists');
-
         const playlist = await collection.findOne({ _id: id });
 
         if (!playlist) {
-            console.warn(`Nenhuma playlist encontrada com id: ${id}`);
+            logWarn('findOnePlaylist', `Nenhuma playlist encontrada com id: ${id}`);
             return null;
         }
 
-        console.log(`Playlist encontrada: ${playlist.nomeDaPlaylist}`);
+        logInfo('findOnePlaylist', `Playlist encontrada: ${playlist.name}`);
         return playlist;
     } catch (error) {
-        console.error('Erro ao buscar playlist:', error.message);
+        logError('findOnePlaylist', 'Erro ao buscar playlist', error);
         throw error;
     }
 }
